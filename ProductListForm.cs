@@ -95,10 +95,11 @@ namespace sisyphus
         {
             public string Name { get; set; }
             public double Price { get; set; }
+            public int Quantity { get; set; } = 1; // 기본 수량 1
 
             public override string ToString()
             {
-                return $"{Name} - {Price:C0}";
+                return $"{Name} - {Price:C0} x {Quantity}";
             }
         }
 
