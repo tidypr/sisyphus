@@ -1,6 +1,6 @@
 ﻿namespace sisyphus
 {
-    partial class ProductListForm
+    partial class ReceiptForm
     {
         /// <summary>
         /// Required designer variable.
@@ -30,14 +30,13 @@
         {
             this.SuspendLayout();
             // 
-            // ProductListForm
+            // Receipt
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1143, 675);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.Name = "ProductListForm";
-            this.Text = "ProductListForm";
+            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Name = "Receipt";
+            this.Text = "Receipt";
             this.ResumeLayout(false);
 
         }

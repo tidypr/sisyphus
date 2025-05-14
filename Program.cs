@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using sisyphus.Models;
+using sisyphus.Services;
 
 namespace sisyphus
 {
@@ -18,6 +19,10 @@ namespace sisyphus
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new LoginForm());
             //Application.Run(new MainForm());
+
+
+            //Application.Run(new ProductListForm());
+            //Application.Run(new ReceiptForm(items));
         }
     }
 }
