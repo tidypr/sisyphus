@@ -1,20 +1,50 @@
-# 
+# Sisyphus 프로젝트
 
+## 프로젝트 소개
+Sisyphus는 레스토랑 테이블 관리 및 주문 시스템을 구현한 데스크톱 애플리케이션입니다.  
+사용자는 테이블 상태를 확인하고, 주문을 추가하거나 결제를 처리할 수 있습니다.  
+직관적인 UI와 데이터베이스 연동을 통해 효율적인 레스토랑 운영을 지원합니다.
 
-## database
-``` bash
-docker run --name sisypos -e MYSQL_ROOT_PASSWORD=rootpassword -d -p 3306:3306 mysql:latest
+## 프로젝트 기간
+2025년 5월 12일 ~ 2025년 5월 16일
+
+## 주요 기능
+- **로그인 및 회원가입**: 사용자 인증 및 계정 관리.
+- **테이블 관리**: 테이블 상태 확인 및 상세 정보 표시.
+- **주문 관리**: 상품 선택 및 주문 추가.
+- **결제 처리**: 주문 내역 삭제 및 테이블 상태 초기화.
+- **데이터베이스 연동**: MySQL을 사용한 데이터 저장 및 조회.
+
+## 기술 스택
+- **프로그래밍 언어**: C#
+- **프레임워크**: .NET Framework 4.7.2
+- **데이터베이스**: MySQL
+
+## 화면 구성
+![alt text](<loginPage.png>)
+![alt text](<TableListPage.png>)
+![alt text](<ItemSelectPage.png>)
+
+## 폴더구조
+```md
+Sisyphus/
+├── Forms
+│   ├── LoginForm.cs
+│   ├── MainForm.cs
+│   ├── ProductListForm.cs
+│   └── ReceiptForm.cs
+├── Models
+│   ├── Item.cs
+│   └── RestaurantTable.cs
+├── Services
+│     ├── AuthService.cs
+│     ├── ItemService.cs
+│     └── RestaurantTableService.cs
+└─ Utils
+    └── Constants.cs
 ```
 
-
-
-
-
-
-CREATE DATABASE SisyphusDB;
-USE SisyphusDB;
-
-<!--  -->
+## 데이터베이스 구조
 ```sql
 CREATE TABLE Users (
     Id INT AUTO_INCREMENT PRIMARY KEY,
@@ -26,7 +56,7 @@ CREATE TABLE RestaurantTable (
     TableID INT AUTO_INCREMENT PRIMARY KEY,  -- 테이블 고유 ID
     TableName VARCHAR(50) NOT NULL,  -- 테이블 이름
     TotalAmount DECIMAL(10, 2) DEFAULT 0,  -- 테이블에서 주문된 총액
-    Status ENUM('공석', '진행중', '완료') NOT NULL DEFAULT 'Empty'  -- 테이블 상태
+    Status ENUM('Available', 'Occupied', 'Empty') NOT NULL DEFAULT 'Empty'  -- 테이블 상태
 );
 CREATE TABLE Item (
     ItemID INT AUTO_INCREMENT PRIMARY KEY,
@@ -50,135 +80,3 @@ CREATE TABLE OrderDetail (
         ON DELETE CASCADE
 );
 ```
-```SQL
-SELECT 
-    i.Name AS ItemName, 
-    od.Quantity, 
-    od.Price, 
-    (od.Quantity * od.Price) AS TotalPrice, 
-    od.OrderTime
-FROM 
-    OrderDetail od
-JOIN 
-    Item i ON od.ItemID = i.ItemID
-WHERE 
-    od.TableID = 1;  -- 테이블 번호 1번에 포함된 아이템 조회
-
-```
-```sql
-SELECT 
-    od.OrderDetailID,
-    rt.TableID,
-    rt.TableName,
-    i.ItemID,
-    i.Name AS ItemName,
-    od.Quantity,
-    od.Price,
-    od.OrderTime
-FROM 
-    OrderDetail od
-JOIN 
-    RestaurantTable rt ON od.TableID = rt.TableID
-JOIN 
-    Item i ON od.ItemID = i.ItemID
-WHERE 
-    od.TableID = 1
-ORDER BY 
-    od.OrderTime;
-
-```
-
-
-<!-- Insert Data -->
-```sql
-INSERT INTO RestaurantTable (TableName, TotalAmount, Status) VALUES
-('Table 1', 0.00, 'Empty'),
-('Table 2', 0.00, 'Empty'),
-('Table 3', 0.00, 'Empty'),
-('Table 4', 0.00, 'Empty'),
-('Table 5', 0.00, 'Empty'),
-('Table 6', 0.00, 'Empty'),
-('Table 7', 0.00, 'Empty'),
-('Table 8', 0.00, 'Empty'),
-('Table 9', 0.00, 'Empty'),
-('Table 10', 0.00, 'Empty'),
-('Table 11', 0.00, 'Empty'),
-('Table 12', 0.00, 'Empty'),
-('Table 13', 0.00, 'Empty'),
-('Table 14', 0.00, 'Empty'),
-('Table 15', 0.00, 'Empty'),
-('Table 16', 0.00, 'Empty'),
-('Table 17', 0.00, 'Empty');
-```
-```sql
-INSERT INTO Item (Name, Quantity, Price, ImageUrl) VALUES
-('food1', 10, 1000, 'https://foodish-api.com/images/dessert/dessert1.jpg'),
-('food2', 10, 2000, 'https://foodish-api.com/images/dessert/dessert2.jpg'),
-('food3', 10, 3000, 'https://foodish-api.com/images/dessert/dessert3.jpg'),
-('food4', 10, 4000, 'https://foodish-api.com/images/dessert/dessert4.jpg'),
-('food5', 10, 5000, 'https://foodish-api.com/images/dessert/dessert5.jpg'),
-('food6', 10, 6000, 'https://foodish-api.com/images/dessert/dessert6.jpg'),
-('food7', 10, 7000, 'https://foodish-api.com/images/dessert/dessert7.jpg'),
-('food8', 10, 8000, 'https://foodish-api.com/images/dessert/dessert8.jpg'),
-('food9', 10, 9000, 'https://foodish-api.com/images/dessert/dessert9.jpg'),
-('food10', 10, 10000, 'https://foodish-api.com/images/dessert/dessert10.jpg');
-```
-
-
-
-```sql
-
-
-
-CREATE TABLE Receipt (
-    ReceiptID INT AUTO_INCREMENT PRIMARY KEY,  -- 영수증 고유 ID
-    TableID INT,  -- 주문한 테이블의 ID
-    Date DATETIME DEFAULT CURRENT_TIMESTAMP,  -- 영수증 발행 날짜
-    TotalAmount DECIMAL(10, 2) NOT NULL,  -- 영수증의 총 금액
-    FOREIGN KEY (TableID) REFERENCES RestaurantTable(TableID)  -- 테이블과의 관계
-);
-
-
-SHOW TABLES;
-select * from Users;
-
-INSERT INTO RestaurantTable (TableName, TotalAmount, Status) VALUES
-('Table 1', 0.00, 'Empty'),
-('Table 2', 0.00, 'Empty'),
-('Table 3', 0.00, 'Empty'),
-('Table 4', 0.00, 'Empty'),
-('Table 5', 0.00, 'Empty'),
-('Table 6', 0.00, 'Empty'),
-('Table 7', 0.00, 'Empty'),
-('Table 8', 0.00, 'Empty'),
-('Table 9', 0.00, 'Empty'),
-('Table 10', 0.00, 'Empty'),
-('Table 11', 0.00, 'Empty'),
-('Table 12', 0.00, 'Empty'),
-('Table 13', 0.00, 'Empty'),
-('Table 14', 0.00, 'Empty'),
-('Table 15', 0.00, 'Empty'),
-('Table 16', 0.00, 'Empty'),
-('Table 17', 0.00, 'Empty');
-
-
-select * from RestaurantTable;
-
-INSERT INTO Item (TableID, Name, Quantity, Price, ImageUrl, TotalPrice) VALUES
-(1, 'Cheeseburger', 2, 5.99, 'https://foodish-api.com/images/dessert/dessert1.jpg', 11.98),
-(1, 'French Fries', 1, 2.99, 'https://example.com/images/fries.png', 2.99),
-(2, 'Coke', 3, 1.50, 'https://example.com/images/coke.png', 4.50),
-(2, 'Chicken Nuggets', 1, 4.99, 'https://example.com/images/nuggets.png', 4.99),
-(3, 'Pizza', 1, 9.99, 'https://example.com/images/pizza.png', 9.99),
-(3, 'Sprite', 2, 1.50, 'https://example.com/images/sprite.png', 3.00),
-(4, 'Spaghetti', 1, 8.50, 'https://example.com/images/spaghetti.png', 8.50),
-(5, 'Garlic Bread', 2, 2.50, 'https://example.com/images/garlicbread.png', 5.00),
-(6, 'Salad', 1, 3.99, 'https://example.com/images/salad.png', 3.99),
-(7, 'Iced Tea', 2, 2.00, 'https://example.com/images/icedtea.png', 4.00);
-
-
-select * from Item;
-
-
-
-drop table Item;
